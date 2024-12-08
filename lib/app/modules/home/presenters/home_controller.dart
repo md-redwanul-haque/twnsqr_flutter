@@ -5,6 +5,8 @@ import '../../../core/themes/theme_controller.dart';
 class HomeController extends GetxController {
   final ThemeController themeController = Get.find();
 
+  RxInt index = 0.obs;
+
   void toggleTheme() {
     themeController.toggleTheme();
   }
