@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:twnsqr_flutter/app/core/utils/app_colors.dart';
 import 'services.dart';
 import 'create.dart';
 import '../presenters/home_controller.dart';
@@ -12,71 +14,218 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     final isWeb = MediaQuery.of(context).size.width > 600; // Assuming width > 600 is web layout.
-
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('EEE, MMM d').format(now);
     return Scaffold(
       appBar: isWeb
           ? null // No AppBar for web
           : AppBar(
-        title: const Text('Section:'),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(8.0), // Add padding for better alignment
-            child: GestureDetector(
-              onTap: () {
-                // Open the drawer when the profile image is tapped
-                Scaffold.of(context).openDrawer();
-              },
-              child: CircleAvatar(
-                backgroundImage: NetworkImage(
-                  'https://via.placeholder.com/150', // Replace with actual user profile image URL
-                ),
-                backgroundColor: Colors.grey.shade200, // Placeholder background
-              ),
-            ),
+        title: Text(
+          formattedDate,
+          style: const TextStyle(
+            fontSize: 16,
+            color: Colors.grey, // Matches the color shown in the example
           ),
+        ),
+        actions: [
+          Row(
+            children: [
+              IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.notifications_none_outlined)),
+              IconButton(
+                  onPressed: () {},
+                  icon: Image.asset(
+                    "assets/face.png",
+                    height: 30,
+                  )),
+            ],
+          )
         ],
       ),
-      // drawer: isWeb
-      //     ? null // Disable the drawer for web
-      //     : Drawer(
-      //   child: ListView(
-      //     children: [
-      //       const DrawerHeader(
-      //         child: Text('Menu'),
-      //         decoration: BoxDecoration(color: Colors.blue),
-      //       ),
-      //       ListTile(
-      //         title: const Text('Toggle Theme'),
-      //         onTap: () {
-      //           controller.toggleTheme();
-      //           Navigator.pop(context);
-      //         },
-      //       ),
-      //     ],
-      //   ),
-      // ),
-      body: Row(
+      body: Column(
         children: [
-          if (isWeb) NavigationRailSection(),
           Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Row(
               children: [
-                Container(
-                  color: Colors.red,
-                  height: 200,
-                  width: double.infinity,
+                if (isWeb) const NavigationRailSection(), // Sidebar for web
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "This week in Estepona",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w500),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      if (!isWeb) TopContainer(), // TopContainer at the top for mobile
+                      Expanded(
+                        child: Container(
+                          color: Colors.white, // Replace with your main content
+                          child: const Center(
+                            child: Text("Main Content Here"),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                Container(
-                  color: Colors.yellow,
-                  height: 200,
-                  width: double.infinity,
-                ),
-                if (!isWeb) CustomBottomNavSection(),
+                if (isWeb) // Show TopContainer in the right sidebar for web
+                  SizedBox(
+                    width: 400, // Adjust width to fit the design
+                    child: TopContainer(),
+                  ),
               ],
             ),
           ),
+          if (!isWeb) const CustomBottomNavSection(), // Show bottom navigation for mobile
         ],
+      ),
+    );
+  }
+}
+
+class TopContainer extends StatelessWidget {
+  const TopContainer({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 14),
+      child: Container(
+        height: 250,
+        width: double.infinity,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+
+            Container(
+              height: 120,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: AppColors.sec_color,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey,
+                    offset: Offset(0.0, 0.6), //(x,y)
+                    blurRadius: 5.0,
+                  ),
+                ],
+              ),
+              child: Padding(
+                padding: EdgeInsets.only(left: 14, top: 8),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "You're close to your goal!",
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          "join more sport activities to collect more points",
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500),
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Row(
+                          crossAxisAlignment:
+                              CrossAxisAlignment.start,
+                          mainAxisAlignment:
+                              MainAxisAlignment.spaceAround,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  borderRadius:
+                                      BorderRadius.circular(5)),
+                              child: Center(
+                                  child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 5, horizontal: 10),
+                                child: Text('Join mow',
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.white)),
+                              )),
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  borderRadius:
+                                      BorderRadius.circular(5)),
+                              child: Center(
+                                  child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 5, horizontal: 10),
+                                child: Text(
+                                  'My points',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      color: Colors.white),
+                                ),
+                              )),
+                            )
+                          ],
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 14),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          SizedBox.square(
+                            dimension: 70,
+                            child: CircularProgressIndicator(
+                              value: 0.62,
+                              // Adjust the progress here
+                              strokeWidth: 6,
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(
+                                      AppColors.progressbarColor),
+                              backgroundColor: Colors.white,
+                            ),
+                          ),
+                          Text(
+                            '27',
+                            style: TextStyle(
+                              fontSize: 26,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -100,31 +249,31 @@ class CustomBottomNavSection extends StatelessWidget {
             onPressed: () {
               Get.to(() => Activities());
             },
-            icon: Icon(Icons.local_activity_outlined),
+            icon: const Icon(Icons.local_activity_outlined),
           ),
           IconButton(
             onPressed: () {
               Get.to(() => Locations());
             },
-            icon: Icon(Icons.location_city_sharp),
+            icon: const Icon(Icons.location_city_sharp),
           ),
           IconButton(
             onPressed: () {
               Get.to(() => Create());
             },
-            icon: Icon(Icons.add),
+            icon: const Icon(Icons.add),
           ),
           IconButton(
             onPressed: () {
               Get.to(() => Profile());
             },
-            icon: Icon(Icons.person_outline_sharp),
+            icon: const Icon(Icons.person_outline_sharp),
           ),
           IconButton(
             onPressed: () {
               Get.to(() => Services());
             },
-            icon: Icon(Icons.pages),
+            icon: const Icon(Icons.pages),
           ),
         ],
       ),
@@ -139,12 +288,12 @@ class NavigationRailSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 250, // Adjust width to match design
-      color: Color(0xFF111111), // Dark background like the image
+      color: const Color(0xFF111111), // Dark background like the image
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(20.0),
+          const Padding(
+            padding: EdgeInsets.all(20.0),
             child: Text(
               'TWNSQR',
               style: TextStyle(
@@ -199,11 +348,11 @@ class NavigationRailSection extends StatelessWidget {
             padding: const EdgeInsets.all(20.0),
             child: ElevatedButton.icon(
               onPressed: () => Get.to(() => Create()),
-              icon: Icon(Icons.add, color: Colors.white),
-              label: Text('Create'),
+              icon: const Icon(Icons.add, color: Colors.white),
+              label: const Text('Create'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF1E88E5), // Match button color
-                minimumSize: Size(double.infinity, 48), // Full width button
+                backgroundColor: const Color(0xFF1E88E5), // Match button color
+                minimumSize: const Size(double.infinity, 48), // Full width button
               ),
             ),
           ),
@@ -223,11 +372,11 @@ class NavigationRailSection extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-        color: isSelected ? Color(0xFF1E88E5) : Colors.transparent, // Highlight active
+        color: isSelected ? const Color(0xFF1E88E5) : Colors.transparent, // Highlight active
         child: Row(
           children: [
             Icon(icon, color: isSelected ? Colors.white : Colors.grey, size: 24),
-            SizedBox(width: 16),
+            const SizedBox(width: 16),
             Text(
               label,
               style: TextStyle(
