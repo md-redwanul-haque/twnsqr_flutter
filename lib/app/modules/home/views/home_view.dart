@@ -8,6 +8,7 @@ import 'activities.dart';
 import 'profile.dart';
 
 class HomeView extends GetView<HomeController> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     final isWeb = MediaQuery.of(context).size.width > 600; // Assuming width > 600 is web layout.
@@ -16,27 +17,44 @@ class HomeView extends GetView<HomeController> {
       appBar: isWeb
           ? null // No AppBar for web
           : AppBar(
-        title: Text('Section: '),
-      ),
-      drawer: isWeb
-          ? null // Disable the drawer for web
-          : Drawer(
-        child: ListView(
-          children: [
-            const DrawerHeader(
-              child: Text('Menu'),
-              decoration: BoxDecoration(color: Colors.blue),
-            ),
-            ListTile(
-              title: const Text('Toggle Theme'),
+        title: const Text('Section:'),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0), // Add padding for better alignment
+            child: GestureDetector(
               onTap: () {
-                controller.toggleTheme();
-                Navigator.pop(context);
+                // Open the drawer when the profile image is tapped
+                Scaffold.of(context).openDrawer();
               },
+              child: CircleAvatar(
+                backgroundImage: NetworkImage(
+                  'https://via.placeholder.com/150', // Replace with actual user profile image URL
+                ),
+                backgroundColor: Colors.grey.shade200, // Placeholder background
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
+      // drawer: isWeb
+      //     ? null // Disable the drawer for web
+      //     : Drawer(
+      //   child: ListView(
+      //     children: [
+      //       const DrawerHeader(
+      //         child: Text('Menu'),
+      //         decoration: BoxDecoration(color: Colors.blue),
+      //       ),
+      //       ListTile(
+      //         title: const Text('Toggle Theme'),
+      //         onTap: () {
+      //           controller.toggleTheme();
+      //           Navigator.pop(context);
+      //         },
+      //       ),
+      //     ],
+      //   ),
+      // ),
       body: Row(
         children: [
           if (isWeb) NavigationRailSection(),
