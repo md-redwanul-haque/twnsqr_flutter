@@ -2,6 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:twnsqr_flutter/app/core/utils/app_colors.dart';
+import 'components/dashline.dart';
+import 'services.dart';
+import 'create.dart';
+import '../presenters/home_controller.dart';
+import 'locations.dart';
+import 'activities.dart';
+import 'profile.dart';
+
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'components/dashline.dart';
 import 'services.dart';
 import 'create.dart';
 import '../presenters/home_controller.dart';
@@ -11,11 +23,13 @@ import 'profile.dart';
 
 class HomeView extends GetView<HomeController> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     final isWeb = MediaQuery.of(context).size.width > 600; // Assuming width > 600 is web layout.
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('EEE, MMM d').format(now);
+
     return Scaffold(
       appBar: isWeb
           ? null // No AppBar for web
@@ -31,16 +45,18 @@ class HomeView extends GetView<HomeController> {
           Row(
             children: [
               IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.notifications_none_outlined)),
+                onPressed: () {},
+                icon: const Icon(Icons.notifications_none_outlined),
+              ),
               IconButton(
-                  onPressed: () {},
-                  icon: Image.asset(
-                    "assets/face.png",
-                    height: 30,
-                  )),
+                onPressed: () {},
+                icon: Image.asset(
+                  "assets/face.png",
+                  height: 30,
+                ),
+              ),
             ],
-          )
+          ),
         ],
       ),
       body: Column(
@@ -54,38 +70,51 @@ class HomeView extends GetView<HomeController> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: Get.width * 0.04),
-                        child: const Text(
-                          "Tues, Nov 12",
-                          style: TextStyle(fontSize: 16, color: Colors.grey),
+                      if (isWeb)
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: Get.width * 0.04),
+                          child: Text(
+                            formattedDate,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey,
+                            ),
+                          ),
                         ),
-                      ),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: Get.width * 0.04),
                         child: const Text(
                           "This week in Estepona",
                           style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black),
+                              fontSize: 20, fontWeight: FontWeight.w500, color: Colors.black),
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 10),
+
+                      if (!isWeb)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 14),
+                          child: TopContainer(),
+                        ),
+                      const SizedBox(height: 10),
 
                       // Search Bar
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: Get.width * 0.04),
-                        child: TextField(
-                          decoration: InputDecoration(
-                            hintText: "What do you feel like doing?",
-                            prefixIcon: const Icon(Icons.search),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12.0),
-                              borderSide: BorderSide.none,
+                        padding: EdgeInsets.symmetric(horizontal: Get.width * 0.02),
+                        child: Card(
+                          elevation: 10,
+                          child: TextField(
+                            decoration: InputDecoration(
+                              hintText: "What do you feel like doing?",
+                              hintStyle: const TextStyle(color: Colors.grey),
+                              suffixIcon: const Icon(Icons.search),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                                borderSide: BorderSide.none,
+                              ),
+                              filled: true,
+                              fillColor: Colors.white,
                             ),
-                            filled: true,
-                            fillColor: Colors.grey.shade200,
                           ),
                         ),
                       ),
@@ -98,6 +127,18 @@ class HomeView extends GetView<HomeController> {
                           scrollDirection: Axis.horizontal,
                           child: Row(
                             children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 8.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: AppColors.items,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                                  child: Image.asset("assets/sliders.png"),
+                                ),
+                              ),
+                              // Filter Chips
                               FilterChipWidget(label: "All", selected: true),
                               FilterChipWidget(label: "Sports"),
                               FilterChipWidget(label: "Food"),
@@ -109,89 +150,88 @@ class HomeView extends GetView<HomeController> {
                           ),
                         ),
                       ),
+
                       const SizedBox(height: 16),
 
                       // List with Vertical Timeline and Activity Cards
                       Expanded(
                         child: Padding(
-                          padding:
-                          EdgeInsets.symmetric(horizontal: Get.width * 0.04),
-                          child: Row(
+                          padding: EdgeInsets.symmetric(horizontal: Get.width * 0.015), // Reduced horizontal padding
+                          child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Vertical Timeline
-                              Column(
+                              // Today / Tuesday Label Section
+                              Row(
                                 children: [
                                   // Circular Indicator
                                   Container(
-                                    height: 16,
-                                    width: 16,
+                                    height: 8, // Compact size for indicator
+                                    width: 8,
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
                                       color: Colors.yellow, // Indicator color
                                     ),
                                   ),
-                                  // Dotted Line
-                                  Expanded(
-                                    child: Container(
-                                      width: 2,
-                                      decoration: BoxDecoration(
-                                        border: Border(
-                                          left: BorderSide(
-                                            color: Colors.grey.shade400,
-                                            width: 1.5,
-                                            style: BorderStyle.solid,
-                                          ),
-                                        ),
-                                      ),
+                                  const SizedBox(width: 4), // Small space between circle and label
+                                  // Label Text
+                                  const Text(
+                                    "Today / tuesday",
+                                    style: TextStyle(
+                                      fontSize: 12, // Compact text size
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black,
                                     ),
                                   ),
                                 ],
                               ),
-                              const SizedBox(width: 16), // Space between timeline and cards
+                              const SizedBox(height: 4), // Minimal space after label
 
-                              // Activity Cards
+                              // Timeline and Activity Cards Section
                               Expanded(
-                                child: ListView(
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    ActivityCard(
-                                      title: "Beach Yoga",
-                                      time: "08:00 (60 min)",
-                                      location: "La Playa de la Rada",
-                                      price: "9€",
-                                      spotsLeft: "8 spots left",
-                                      intensity: "light",
-                                      buttonLabel: "Join",
+                                    // Timeline Column
+                                    Column(
+                                      children: [
+                                        // Dashed Line
+                                        Expanded(
+                                          child: DashedLine(
+                                            height: double.infinity,
+                                            dashHeight: 3, // Compact dash size
+                                            dashWidth: 1.5, // Compact dash width
+                                            color: Colors.grey.shade400,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    ActivityCard(
-                                      title: "Reformer Pilates",
-                                      time: "09:00 (60 min)",
-                                      location: "Wellness Studios",
-                                      price: "15€",
-                                      spotsLeft: "4 spots left",
-                                      intensity: "medium",
-                                      childcare: true,
-                                      buttonLabel: "Join",
+                                    const SizedBox(width: 6), // Small space between timeline and cards
+
+                                    // Activity Cards Section
+                                    Expanded(
+                                      child: ListView.builder(
+                                        padding: EdgeInsets.zero, // Removed extra padding
+                                        physics: const ClampingScrollPhysics(), // Prevents overscrolling
+                                        itemCount: controller.activityList.length, // Use the length of the activities list
+                                        itemBuilder: (context, index) {
+                                          final activityItem = controller.activityList[index]; // Get activity data by index
+                                          return Padding(
+                                            padding: const EdgeInsets.only(bottom: 8.0), // Consistent and minimal spacing
+                                            child: ActivityCard(
+                                              title: activityItem["title"], // Title from the data
+                                              time: activityItem["time"], // Time from the data
+                                              location: activityItem["location"], // Location from the data
+                                              price: activityItem["price"], // Price from the data
+                                              spotsLeft: activityItem["spotsLeft"], // Spots left from the data
+                                              intensity: activityItem["intensity"], // Intensity level
+                                              childcare: activityItem["childcare"] ?? false, // Optional childcare flag
+                                              buttonLabel: activityItem["buttonLabel"], // Join/Sold Out button label
+                                            ),
+                                          );
+                                        },
+                                      ),
                                     ),
-                                    ActivityCard(
-                                      title: "5-a-side Football",
-                                      time: "12:30 (45 min)",
-                                      location: "Municipal Sports Center",
-                                      price: "19€",
-                                      spotsLeft: "0 spots left",
-                                      intensity: "high",
-                                      childcare: true,
-                                      buttonLabel: "Sold Out",
-                                    ),
-                                    ActivityCard(
-                                      title: "Standing Tapas Lunch",
-                                      time: "13:15 (60 min)",
-                                      location: "Casa Marina",
-                                      price: "15€",
-                                      spotsLeft: "5 spots left",
-                                      intensity: "low",
-                                      buttonLabel: "Join",
-                                    ),
+
                                   ],
                                 ),
                               ),
@@ -199,48 +239,55 @@ class HomeView extends GetView<HomeController> {
                           ),
                         ),
                       ),
+
+
+
+
                     ],
                   ),
                 ),
 
                 if (isWeb)
                   Expanded(
-                    flex: 1, // Sidebar takes one part
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        ConstrainedBox(
-                          constraints: BoxConstraints(
-                            maxWidth: MediaQuery.of(context).size.width * 0.3, // Responsive width
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 20),
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 40),
+                          ConstrainedBox(
+                            constraints: BoxConstraints(
+                              maxWidth: MediaQuery.of(context).size.width * 0.3,
+                            ),
+                            child: TopContainer(),
                           ),
-                          child: TopContainer(),
-                        ),
-                        const SizedBox(height: 10),
-                        ConstrainedBox(
-                          constraints: BoxConstraints(
-                            maxWidth: MediaQuery.of(context).size.width * 0.3,
+                          const SizedBox(height: 20),
+                          ConstrainedBox(
+                            constraints: BoxConstraints(
+                              maxWidth: MediaQuery.of(context).size.width * 0.3,
+                            ),
+                            child: CenterContainer(),
                           ),
-                          child: CenterContainer(),
-                        ),
-                        const SizedBox(height: 10),
-                        ConstrainedBox(
-                          constraints: BoxConstraints(
-                            maxWidth: MediaQuery.of(context).size.width * 0.3,
+                          const SizedBox(height: 20),
+                          ConstrainedBox(
+                            constraints: BoxConstraints(
+                              maxWidth: MediaQuery.of(context).size.width * 0.3,
+                            ),
+                            child: BottomContainer(),
                           ),
-                          child: BottomContainer(),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
               ],
             ),
           ),
-          if (!isWeb) const CustomBottomNavSection(), // Show bottom navigation for mobile
+          if (!isWeb) const CustomBottomNavSection(),
         ],
       ),
     );
   }
 }
+
 
 
 
@@ -262,98 +309,129 @@ class TopContainer extends StatelessWidget {
           ),
         ],
       ),
-      padding: const EdgeInsets.all(14), // Consistent padding
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      padding: const EdgeInsets.only(left: 14, bottom: 14, top: 14), // Consistent padding
+      child: Column(
+       crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            flex: 2,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "You're close to your goal!",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.black),
-                ),
-                const SizedBox(height: 5),
-                const Text(
-                  "Join more sport activities to collect more points",
-                  style: TextStyle(fontSize: 12,color: Colors.black),
-                ),
-                const SizedBox(height: 15),
-                Row(
+          Text(
+            "You're close to your goal!",
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w600,
+              color: Colors.black,
+            ),
+            maxLines: 1, // Ensure it remains on one line
+            // Gracefully handle overflow
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Row(// Center align row contents
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 4, horizontal: 4),
-                          child: Center(
-                            child: const Text(
-                              'Join now',
-                              style: TextStyle(fontSize: 13, color: Colors.white),
-                            ),
-                          ),
-                        ),
+                    // Title text on one line
+
+                    const SizedBox(height: 5),
+                    const Text(
+                      "Join more sport activities to \ncollect more points",
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.black,
                       ),
                     ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 4, horizontal: 4),
-                          child: Center(
-                            child: const Text(
-                              'My points',
-                              style: TextStyle(fontSize: 13, color: Colors.white),
+                    const SizedBox(height: 15),
+                    Row(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 8,
+                              horizontal: 12,
+                            ),
+                            child: Center(
+                              child: Text(
+                                'Join now',
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.white,
+                                ),
+                              ),
                             ),
                           ),
                         ),
+                        const SizedBox(width: 10),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 8,
+                              horizontal: 12,
+                            ),
+                            child: Center(
+                              child: Text(
+                                'My points',
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              // Progress bar on the right
+              SizedBox(
+                width: 90, // Adjust to match the required size
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    SizedBox(
+                      width: 70,
+                      height: 70,
+                      child: CircularProgressIndicator(
+                        value: 0.62, // Adjust the progress here
+                        strokeWidth: 6,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          AppColors.progressbarColor,
+                        ),
+                        backgroundColor: Colors.white,
+                      ),
+                    ),
+                    const Text(
+                      '27',
+                      style: TextStyle(
+                        fontSize: 26,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
                       ),
                     ),
                   ],
                 ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 20),
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              SizedBox.square(
-                dimension: 70, // Fixed size for the progress circle
-                child: CircularProgressIndicator(
-                  value: 0.62, // Adjust the progress here
-                  strokeWidth: 6,
-                  valueColor:
-                  AlwaysStoppedAnimation<Color>(AppColors.progressbarColor),
-                  backgroundColor: Colors.white,
-                ),
-              ),
-              const Text(
-                '27',
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
               ),
             ],
-          ),
+          )
         ],
       ),
     );
   }
 }
+
+
+
 
 class CenterContainer extends StatelessWidget {
   @override
@@ -370,23 +448,23 @@ class CenterContainer extends StatelessWidget {
           SizedBox(height: Get.height*0.06),
           Text(
             "Weekly workshops",
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
 
           Text(
             "for kids",
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 10),
           Text(
             "Sign up for early access to weekly activities",
-            style: TextStyle(fontSize: 12,color: Colors.black),
+            style: TextStyle(fontSize: 13,color: Colors.black),
           ),
           Text(
             "for your kids full of learning and fun!",
-            style: TextStyle(fontSize: 12,color: Colors.black),
+            style: TextStyle(fontSize: 13,color: Colors.black),
           ),
-          SizedBox(height: 5,),
+          SizedBox(height: 10,),
           Container(
 
             decoration: BoxDecoration(
@@ -398,7 +476,7 @@ class CenterContainer extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 6,top: 2,bottom: 2),
-                  child: Text('Learn more',style: TextStyle(fontSize: 15,color: Colors.black),),
+                  child: Text('Learn more',style: TextStyle(fontSize: 16,color: Colors.black,fontWeight: FontWeight.w400),),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4,horizontal: 4),
@@ -418,12 +496,12 @@ class BottomContainer extends StatelessWidget {
     return ConstrainedBox(
       constraints: BoxConstraints(
         maxWidth: MediaQuery.of(context).size.width * 0.3, // Same width as others
-        minHeight: 350, // Match the height of TopContainer and CenterContainer
+        minHeight: 340, // Match the height of TopContainer and CenterContainer
       ),
       child: Container(
         decoration: BoxDecoration(
           image: const DecorationImage(
-            image: AssetImage("assets/bottom_image.png"), // Background image
+            image: AssetImage("assets/image.png"), // Background image
             fit: BoxFit.fill, // Ensure the image covers the container
           ),
           borderRadius: BorderRadius.circular(12), // Match corner radius of others
@@ -435,10 +513,108 @@ class BottomContainer extends StatelessWidget {
             ),
           ],
         ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Title Text
+              SizedBox(
+                height: Get.height*0.02,
+              ),
+              Text(
+                "Popular events near you!",
+                style: TextStyle(fontSize: 22, color: Colors.white),
+              ),
+              // Subtitle Text
+              SizedBox(
+                height: Get.height*0.14,
+              ),
+              Text(
+                "Unleash the fun! Explore the world of\nexciting events happening near you.",
+                style: TextStyle(fontSize: 16, color: Colors.white),
+              ),
+              SizedBox(height: 20),
+              // See More Section
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Center(
+                  child: Container(
+                    height: 45,
+                    decoration: BoxDecoration(
+                      color: Colors.white, // Background color of the widget
+                      borderRadius: BorderRadius.circular(12), // Rounded edges
+                    ),
+                    child: Row(
+                      children: [
+                        // Overlapping images on the left
+                        SizedBox(
+                          width: 90, // Adjust width for the stack of images
+                          child: Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              Positioned(
+                                left: -12,
+                                child: ClipOval(
+                                  child: Image.asset(
+                                    'assets/image3.png', // First image
+                                    width: 50,
+                                    height: 50,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                left: 0,
+                                child: ClipOval(
+                                  child: Image.asset(
+                                    'assets/image2.png', // Second image
+                                    width: 50,
+                                    height: 50,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                left: 10,
+                                child: ClipOval(
+                                  child: Image.asset(
+                                    'assets/image1.png', // Third image
+                                    width: 50,
+                                    height: 50,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        // "See more" text on the right
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Text(
+                            'See more',
+                            style: TextStyle(
+                              color: Colors.black, // Text color
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500, // Text style similar to the image
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
+            ],
+          ),
+        ),
       ),
     );
   }
 }
+
 
 
 
@@ -627,126 +803,132 @@ class ActivityCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Title and Price
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                price,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-
-          // Time and Location
-          Text(
-            "$time • $location",
-            style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
-          ),
-          const SizedBox(height: 8),
-
-          // Spots Left and Intensity
-          Row(
-            children: [
-              Text(
-                spotsLeft,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: spotsLeft == "0 spots left" ? Colors.red : Colors.black,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Container(
-                decoration: BoxDecoration(
-                  color: intensity == "high"
-                      ? Colors.orange.shade200
-                      : (intensity == "medium"
-                      ? Colors.purple.shade200
-                      : Colors.blue.shade200),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                padding:
-                const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                child: Text(
-                  intensity,
-                  style: const TextStyle(fontSize: 12),
-                ),
-              ),
-              if (childcare)
-                const Padding(
-                  padding: EdgeInsets.only(left: 8),
-                  child: Chip(
-                    label: Text("childcare"),
-                    backgroundColor: Colors.greenAccent,
+    return Card(
+      color: Colors.white,
+      elevation: 10,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Title and Price
+            Text(
+              "$time",
+              style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+            ),
+            //$time •
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-            ],
-          ),
-          const SizedBox(height: 8),
-
-          // Join or Sold Out Button
-          if (buttonLabel == "Sold Out")
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
-              decoration: BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Text(
-                "Sold Out",
-                style: TextStyle(color: Colors.white, fontSize: 14),
-              ),
-            )
-          else
-            ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+                Text(
+                  price,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
-              ),
-              child: const Text(
-                "Join",
-                style: TextStyle(color: Colors.white),
-              ),
+              ],
             ),
-        ],
+            const SizedBox(height: 8),
+
+            // Time and Location
+           Row(
+             children: [
+               Icon(Icons.location_on_outlined,color: Colors.grey,),
+               Text(
+                 "$location",
+                 style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+               ),
+
+             ],
+           ),
+            const SizedBox(height: 8),
+
+            // Spots Left and Intensity
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  spotsLeft,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: spotsLeft == "0 spots left" ? Colors.red : Colors.black,
+                  ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: intensity == "high"
+                        ? Colors.orange.shade200
+                        : (intensity == "medium"
+                        ? Colors.purple.shade200
+                        : Colors.blue.shade200),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  child: Text(
+                    intensity,
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                ),
+                if (childcare)
+                  const Padding(
+                    padding: EdgeInsets.only(left: 8),
+                    child: Chip(
+                      label: Text("childcare"),
+                      backgroundColor: Colors.greenAccent,
+                    ),
+                  ),
+
+                if (buttonLabel == "Sold Out")
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Text(
+                      "Sold Out",
+                      style: TextStyle(color: Colors.white, fontSize: 14),
+                    ),
+                  )
+                else
+                  ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text(
+                      "Join",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+
+              ],
+            ),
+            const SizedBox(height: 8),
+
+            // Join or Sold Out Button
+
+          ],
+        ),
       ),
     );
   }
 }
 
-class FilterChipWidget extends StatelessWidget {
+class FilterChipWidget extends StatefulWidget {
   final String label;
   final bool selected;
 
@@ -757,27 +939,49 @@ class FilterChipWidget extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _FilterChipWidgetState createState() => _FilterChipWidgetState();
+}
+
+class _FilterChipWidgetState extends State<FilterChipWidget> {
+  bool isSelected = false;
+
+  @override
+  void initState() {
+    super.initState();
+    isSelected = widget.selected;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(right: 8.0),
-      child: Container(
-        decoration: BoxDecoration(
-          color: selected ? Colors.purple.shade100 : Colors.grey.shade200,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: selected ? Colors.black : Colors.grey.shade600,
-            fontWeight: FontWeight.w500,
-            fontSize: 14,
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            isSelected = !isSelected; // Toggle selection
+          });
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            color: isSelected ? AppColors.selectedItems : AppColors.items,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+          child: Text(
+            widget.label,
+            style: TextStyle(
+              color: isSelected ? Colors.black : Colors.grey.shade600,
+              fontWeight: FontWeight.w500,
+              fontSize: 14,
+            ),
           ),
         ),
       ),
     );
   }
 }
+
+
 
 
 

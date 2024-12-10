@@ -9,8 +9,8 @@ class AppColors {
   static final Color progressbarColor = const Color(0xFF6BBEF7);
 
   static final Color centerBox = const Color(0xFFFBF2C0);
-  static final Color c4 = const Color(0xFFECDDFA);
-  static final Color c5 = const Color(0xFFF4EEFC);
+  static final Color selectedItems = const Color(0xFFBAA1C8);
+  static final Color items = const Color(0xFFEEE1F5);
   static final Color bgc3 = const Color(0xFFA1B4AD);
   static const Color textColor = const Color(0xFF217A74);
   static const Color iconColor = const Color(0xFF5FC8C0);
