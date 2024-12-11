@@ -17,10 +17,10 @@ class AppColors {
   static const Color childCare = const Color(0xFFD8F7DF);
   static const Color customGray = const Color(0xFF919696);
   static const Color backGroundColor = const Color(0xFFF8FEFA);
-  static const Color carasolColor = const Color(0xFFB5B9E3);
+  static const Color textColor = const Color(0xFF76C8FF);
   static const Color ContainerGray = const Color(0xFFEEEEEE);
   static const Color redButton = const Color(0xFFFEF1F0);
-  static const Color redButtonText = const Color(0xFFD5303D);
+  static const Color buttoncolor = const Color(0xFF76C8FF);
   static const Color systemButton = const Color(0xFFE6FFFB);
   static const Color systemButtonText = const Color(0xFF2C979C);
   static const Color hostButton = const Color(0xFFF6FFED);

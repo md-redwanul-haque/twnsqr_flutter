@@ -22,7 +22,7 @@ class TopContainer extends StatelessWidget {
           ),
         ],
       ),
-      padding: const EdgeInsets.only(left: 14, bottom: 14, top: 14),
+      padding: const EdgeInsets.only(left: 14, bottom: 10, top: 8),
       // Consistent padding
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

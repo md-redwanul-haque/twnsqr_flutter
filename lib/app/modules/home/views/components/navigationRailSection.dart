@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:twnsqr_flutter/app/modules/home/views/components/profile.dart';
 
-import '../activities.dart';
-import '../create.dart';
-import '../locations.dart';
-import '../services.dart';
+import '../../../../core/utils/app_colors.dart';
+import 'activities.dart';
+import 'community.dart';
+import 'create.dart';
+import 'locations.dart';
+import 'notification.dart';
+import 'services.dart';
 
 
 class NavigationRailSection extends StatelessWidget {
@@ -18,71 +22,120 @@ class NavigationRailSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.all(20.0),
-            child: Text(
-              'TWNSQR',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+           Padding(
+            padding: EdgeInsets.only(left: 40,top: 30,bottom: 30,right: 20),
+            child:
+              RichText(
+                text: const TextSpan(
+                  children: [
+                    TextSpan(
+                      text: "TWN",
+                      style: TextStyle(
+                        fontSize: 26,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    TextSpan(
+                      text: "SQR",
+                      style: TextStyle(
+                        fontSize: 26,
+
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textColor,
+                      ),
+                    ),
+                  ],
+                ),)
+
+
           ),
           Expanded(
-            child: ListView(
-              children: [
-                _buildSidebarItem(
-                  context,
-                  icon: Icons.local_activity_outlined,
-                  label: 'Activities',
-                  onTap: () => Get.to(() => Activities()),
-                  isSelected: true, // Example selected state
-                ),
-                _buildSidebarItem(
-                  context,
-                  icon: Icons.location_city_sharp,
-                  label: 'Locations',
-                  onTap: () => Get.to(() => Locations()),
-                  isSelected: false,
-                ),
-                _buildSidebarItem(
-                  context,
-                  icon: Icons.pages,
-                  label: 'Services',
-                  onTap: () => Get.to(() => Services()),
-                  isSelected: false,
-                ),
-                _buildSidebarItem(
-                  context,
-                  icon: Icons.group,
-                  label: 'Communities',
-                  onTap: () {}, // Add navigation logic
-                  isSelected: false,
-                ),
-                _buildSidebarItem(
-                  context,
-                  icon: Icons.notifications_outlined,
-                  label: 'Notifications',
-                  onTap: () {}, // Add navigation logic
-                  isSelected: false,
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: ElevatedButton.icon(
-              onPressed: () => Get.to(() => Create()),
-              icon: const Icon(Icons.add, color: Colors.white),
-              label: const Text('Create'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF1E88E5), // Match button color
-                minimumSize:
-                const Size(double.infinity, 48), // Full width button
+            child: Padding(
+              padding: const EdgeInsets.only(left: 20),
+              child: ListView(
+                children: [
+                  _buildSidebarItem(
+                    context,
+                    label: 'Activities',
+                    onTap: () => Get.to(() => Activities()),
+                    isSelected: true, assetPath: 'assets/activities.png', // Example selected state
+                  ),
+                  _buildSidebarItem(
+                    context,
+                    label: 'Locations',
+                    onTap: () => Get.to(() => Locations()),
+                    isSelected: false, assetPath: 'assets/location.png',
+                  ),
+                  _buildSidebarItem(
+                    context,
+                    label: 'Services',
+                    onTap: () => Get.to(() => Services()),
+                    isSelected: false, assetPath: 'assets/service.png',
+                  ),
+                  _buildSidebarItem(
+                    context,
+                    label: 'Communities',
+                    onTap: () => Get.to(() => Community()), // Add navigation logic
+                    isSelected: false, assetPath: 'assets/community.png',
+                  ),
+                  _buildSidebarItem(
+                    context,
+                    label: 'Notifications',
+                    onTap: () => Get.to(() => CusNotification()), // Add navigation logic
+                    isSelected: false, assetPath: 'assets/bell.png',
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: ElevatedButton.icon(
+                      onPressed: () => Get.to(() => Create()),
+                      icon: const Icon(Icons.add, color: Colors.black),
+                      label: const Text('Create',style: TextStyle(color: Colors.black),),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.buttoncolor, // Match button color
+                        minimumSize:
+                        const Size(double.infinity, 48), // Full width button
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () => Get.to(() => Profile()),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 2, vertical: 12.0),
+                      color: Colors.transparent, // Highlight active
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Image.asset(
+                            "assets/face.png",
+                            height: 30,
+                            // Tint color based on selection
+                          ),
+
+                          Text(
+                            "Profile",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
+                          ),
+
+                          //more-vertical.png
+                          Image.asset(
+                            "assets/more-vertical.png",
+                            height: 30,
+                            // Tint color based on selection
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
               ),
             ),
           ),
+
         ],
       ),
     );
@@ -90,7 +143,7 @@ class NavigationRailSection extends StatelessWidget {
 
   Widget _buildSidebarItem(
       BuildContext context, {
-        required IconData icon,
+        required String assetPath, // Asset path for the image
         required String label,
         required VoidCallback onTap,
         required bool isSelected,
@@ -99,17 +152,20 @@ class NavigationRailSection extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-        color: isSelected ? const Color(0xFF1E88E5) : Colors.transparent,
-        // Highlight active
+        color:  Colors.transparent, // Highlight active
         child: Row(
           children: [
-            Icon(icon,
-                color: isSelected ? Colors.white : Colors.grey, size: 24),
-            const SizedBox(width: 16),
+            Image.asset(
+              assetPath,
+              height: 24, // Set the height of the image
+              width: 24,  // Set the width of the image
+              color: Colors.white  // Tint color based on selection
+            ),
+            const SizedBox(width: 24),
             Text(
               label,
               style: TextStyle(
-                color: isSelected ? Colors.white : Colors.grey,
+                color:  Colors.white ,
                 fontSize: 16,
               ),
             ),
@@ -118,4 +174,5 @@ class NavigationRailSection extends StatelessWidget {
       ),
     );
   }
+
 }

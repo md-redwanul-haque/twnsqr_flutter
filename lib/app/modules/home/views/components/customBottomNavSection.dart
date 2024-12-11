@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../activities.dart';
-import '../create.dart';
-import '../locations.dart';
-import '../profile.dart';
-import '../services.dart';
+import 'activities.dart';
+import 'create.dart';
+import 'locations.dart';
+import 'community.dart';
+import 'services.dart';
 
 
 
@@ -17,8 +16,9 @@ class CustomBottomNavSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 100,
-      color: Colors.blue,
+      decoration: BoxDecoration(
+        border: Border.fromBorderSide(BorderSide(width: 0.05))
+      ),
       width: double.infinity,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -27,31 +27,31 @@ class CustomBottomNavSection extends StatelessWidget {
             onPressed: () {
               Get.to(() => Activities());
             },
-            icon: const Icon(Icons.local_activity_outlined),
+            icon: Image.asset("assets/activities.png"),
           ),
           IconButton(
             onPressed: () {
               Get.to(() => Locations());
             },
-            icon: const Icon(Icons.location_city_sharp),
+            icon: Image.asset("assets/location.png"),
           ),
           IconButton(
             onPressed: () {
               Get.to(() => Create());
             },
-            icon: const Icon(Icons.add),
+            icon:  Image.asset("assets/plus.png"),
           ),
           IconButton(
             onPressed: () {
-              Get.to(() => Profile());
+              Get.to(() => Community());
             },
-            icon: const Icon(Icons.person_outline_sharp),
+            icon: Image.asset("assets/community.png"),
           ),
           IconButton(
             onPressed: () {
               Get.to(() => Services());
             },
-            icon: const Icon(Icons.pages),
+            icon:  Image.asset("assets/service.png"),
           ),
         ],
       ),

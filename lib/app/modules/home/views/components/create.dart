@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../presenters/home_controller.dart';
+import '../../presenters/home_controller.dart';
+
+
 
 class Create extends GetView<HomeController> {
   @override
@@ -10,9 +12,10 @@ class Create extends GetView<HomeController> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Section: '),
+        centerTitle: true,
+        title: Text('Create'),
       ),
-      body: Center(child: Text("Profile")),
+      body: Center(child: Text("Create")),
     );
 
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../presenters/home_controller.dart';
+import '../../presenters/home_controller.dart';
 
 class Locations extends GetView<HomeController> {
   @override
@@ -10,9 +10,10 @@ class Locations extends GetView<HomeController> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Section: '),
+        centerTitle: true,
+        title: Text('Locations'),
       ),
-      body: Center(child: Text("Profile")),
+      body: Center(child: Text("Locations")),
     );
 
   }
