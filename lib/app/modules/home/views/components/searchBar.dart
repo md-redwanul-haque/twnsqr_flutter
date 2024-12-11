@@ -11,7 +11,7 @@ class CustomSearchBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding:
-      EdgeInsets.symmetric(horizontal: Get.width * 0.02),
+      EdgeInsets.symmetric(horizontal: Get.width * 0.04),
       child: Card(
         elevation: 5,
         child: TextField(

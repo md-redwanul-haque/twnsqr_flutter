@@ -123,7 +123,7 @@ class ActivityCard extends StatelessWidget {
                             color: AppColors.childCare,
                             borderRadius: BorderRadius.circular(4),
                           ),
-                          padding: EdgeInsets.symmetric(vertical: 2,horizontal: 10),
+                          padding: EdgeInsets.symmetric(vertical: 2,horizontal: 6),
                           child: Text(
                             "Childcare",
                             style: const TextStyle(fontSize: 12),
