@@ -104,6 +104,7 @@ class HomeView extends GetView<HomeController> {
                       CustomSearchBar(),
                       const SizedBox(height: 10),
 
+
                       // Filter Buttons Section
                       FilterButtonSection(),
                       const SizedBox(height: 10),
