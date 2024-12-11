@@ -109,6 +109,7 @@ class HomeView extends GetView<HomeController> {
                     ],
                   ),
                 ),
+
                 //Web Right sidebar section
                 if (isWeb)
                   RightSideBar(),
