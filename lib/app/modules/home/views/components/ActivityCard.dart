@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:twnsqr_flutter/app/core/utils/app_colors.dart';
 
 class ActivityCard extends StatelessWidget {
   final String title;
@@ -77,41 +78,58 @@ class ActivityCard extends StatelessWidget {
                   const SizedBox(height: 8),
                   // Spots left and intensity
                   Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        spotsLeft,
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: spotsLeft == "0 spots left"
-                              ? Colors.red
-                              : Colors.black,
+                      Container(
+                        padding: EdgeInsets.symmetric(vertical: 2,horizontal: 6),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(4)
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(Icons.person_outline_rounded,size: 15,),
+                            SizedBox(width: 2,),
+                            Text(
+                              spotsLeft,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       const SizedBox(width: 8),
                       Container(
                         decoration: BoxDecoration(
                           color: intensity == "high"
-                              ? Colors.orange.shade200
+                              ? AppColors.high
                               : (intensity == "medium"
-                                  ? Colors.purple.shade200
-                                  : Colors.blue.shade200),
-                          borderRadius: BorderRadius.circular(8),
+                                  ? AppColors.medium
+                                  : AppColors.bgc3),
+                          borderRadius: BorderRadius.circular(4),
                         ),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
+                        padding: EdgeInsets.symmetric(vertical: 2,horizontal: 10),
                         child: Text(
                           intensity,
                           style: const TextStyle(fontSize: 12),
                         ),
                       ),
+                      const SizedBox(width: 8),
                       if (childcare)
-                        const Padding(
-                          padding: EdgeInsets.only(left: 8),
-                          child: Chip(
-                            label: Text("Childcare"),
-                            backgroundColor: Colors.greenAccent,
+                        Container(
+                          decoration: BoxDecoration(
+                            color: AppColors.childCare,
+                            borderRadius: BorderRadius.circular(4),
                           ),
-                        ),
+                          padding: EdgeInsets.symmetric(vertical: 2,horizontal: 10),
+                          child: Text(
+                            "Childcare",
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        )
+
                     ],
                   ),
                 ],
