@@ -11,10 +11,10 @@ class AppColors {
   static final Color centerBox = const Color(0xFFFBF2C0);
   static final Color selectedItems = const Color(0xFFBAA1C8);
   static final Color items = const Color(0xFFEEE1F5);
-  static final Color bgc3 = const Color(0xFFA1B4AD);
-  static const Color textColor = const Color(0xFF217A74);
-  static const Color iconColor = const Color(0xFF5FC8C0);
-  static const Color iconColor2 = const Color(0xFFA4E2DC);
+  static final Color bgc3 = const Color(0xFFD5F1FF);
+  static const Color medium = const Color(0xFFF3E8FF);
+  static const Color high = const Color(0xFFFFEAD1);
+  static const Color childCare = const Color(0xFFD8F7DF);
   static const Color customGray = const Color(0xFF919696);
   static const Color backGroundColor = const Color(0xFFF8FEFA);
   static const Color carasolColor = const Color(0xFFB5B9E3);
