@@ -65,10 +65,13 @@ class HomeView extends GetView<HomeController> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      if (isWeb)SizedBox(
+                        height: 40,
+                      ),
                       if (isWeb)
                         Padding(
                           padding: EdgeInsets.symmetric(
-                              horizontal: Get.width * 0.04),
+                              horizontal: Get.width * 0.02),
                           child: Text(
                             formattedDate,
                             style: const TextStyle(
@@ -79,7 +82,7 @@ class HomeView extends GetView<HomeController> {
                         ),
                       Padding(
                         padding:
-                            EdgeInsets.symmetric(horizontal: Get.width * 0.04),
+                            EdgeInsets.symmetric(horizontal: Get.width * 0.02),
                         child: const Text(
                           "This week in Estepona",
                           style: TextStyle(
@@ -99,11 +102,11 @@ class HomeView extends GetView<HomeController> {
 
                       // Search Bar Section
                       CustomSearchBar(),
-                      const SizedBox(height: 5),
+                      const SizedBox(height: 10),
 
                       // Filter Buttons Section
                       FilterButtonSection(),
-                      const SizedBox(height: 5),
+                      const SizedBox(height: 10),
                       //Timeline Section
                       TimeLineSection(controller: controller),
                     ],
